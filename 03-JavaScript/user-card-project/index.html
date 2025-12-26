@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Card Project - Call, Bind, Apply Demo</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      h1 {
+        text-align: center;
+        color: white;
+        margin-bottom: 30px;
+        font-size: 2.5rem;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .main-content {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+        margin-bottom: 30px;
+      }
+
+      .form-section,
+      .users-section {
+        background: rgba(255, 255, 255, 0.95);
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(10px);
+      }
+
+      .form-section h2,
+      .users-section h2 {
+        color: #333;
+        margin-bottom: 20px;
+        font-size: 1.8rem;
+        border-bottom: 3px solid #667eea;
+        padding-bottom: 10px;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+        color: #555;
+      }
+
+      input,
+      textarea,
+      select {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+      }
+
+      input:focus,
+      textarea:focus,
+      select:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 10px rgba(102, 126, 234, 0.3);
+      }
+
+      textarea {
+        resize: vertical;
+        min-height: 100px;
+      }
+
+      .btn {
+        padding: 12px 24px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        margin: 5px;
+      }
+
+      .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      .btn-primary {
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        color: white;
+      }
+
+      .btn-success {
+        background: linear-gradient(45deg, #28a745, #20c997);
+        color: white;
+      }
+
+      .btn-warning {
+        background: linear-gradient(45deg, #ffc107, #fd7e14);
+        color: #212529;
+      }
+
+      .btn-danger {
+        background: linear-gradient(45deg, #dc3545, #e83e8c);
+        color: white;
+      }
+
+      .user-card {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        border-left: 5px solid #667eea;
+      }
+
+      .user-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+      }
+
+      .user-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+      }
+
+      .user-avatar {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-right: 15px;
+        border: 3px solid #667eea;
+      }
+
+      .user-info h3 {
+        color: #333;
+        margin-bottom: 5px;
+      }
+
+      .user-role {
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        color: white;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        display: inline-block;
+      }
+
+      .user-bio {
+        color: #666;
+        line-height: 1.6;
+        margin-top: 10px;
+      }
+
+      .user-actions {
+        margin-top: 15px;
+        display: flex;
+        gap: 10px;
+      }
+
+      .stats-section {
+        background: rgba(255, 255, 255, 0.95);
+        padding: 20px;
+        border-radius: 15px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(10px);
+        margin-bottom: 20px;
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+      }
+
+      .stat-card {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        padding: 20px;
+        border-radius: 12px;
+        text-align: center;
+      }
+
+      .stat-number {
+        font-size: 2rem;
+        font-weight: bold;
+        margin-bottom: 5px;
+      }
+
+      .stat-label {
+        font-size: 0.9rem;
+        opacity: 0.9;
+      }
+
+      .demo-section {
+        background: rgba(255, 255, 255, 0.95);
+        padding: 20px;
+        border-radius: 15px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(10px);
+        margin-bottom: 20px;
+      }
+
+      .demo-section h3 {
+        color: #333;
+        margin-bottom: 15px;
+        font-size: 1.3rem;
+      }
+
+      .method-demo {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 8px;
+        margin: 10px 0;
+        border-left: 4px solid #667eea;
+      }
+
+      .code-example {
+        background: #1a1a1a;
+        color: #00ff41;
+        padding: 15px;
+        border-radius: 8px;
+        font-family: "Courier New", monospace;
+        font-size: 14px;
+        margin: 10px 0;
+        overflow-x: auto;
+      }
+
+      .no-users {
+        text-align: center;
+        color: #666;
+        font-style: italic;
+        padding: 40px;
+      }
+
+      @media (max-width: 768px) {
+        .main-content {
+          grid-template-columns: 1fr;
+        }
+
+        .container {
+          padding: 10px;
+        }
+
+        h1 {
+          font-size: 2rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>👥 User Card Project - Call, Bind, Apply Demo</h1>
+
+      <!-- Stats Section -->
+      <div class="stats-section">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-number" id="totalUsers">0</div>
+            <div class="stat-label">Total Users</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" id="methodCalls">0</div>
+            <div class="stat-label">Method Calls</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" id="bindUsage">0</div>
+            <div class="stat-label">Bind Usage</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" id="callApplyUsage">0</div>
+            <div class="stat-label">Call/Apply Usage</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="main-content">
+        <!-- Form Section -->
+        <div class="form-section">
+          <h2>📝 Add New User</h2>
+          <form id="form">
+            <div class="form-group">
+              <label for="userName">👤 Name:</label>
+              <input
+                type="text"
+                id="userName"
+                name="userName"
+                required
+                placeholder="Enter full name"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="userRole">💼 Role:</label>
+              <select id="userRole" name="userRole" required>
+                <option value="">Select Role</option>
+                <option value="Frontend Developer">Frontend Developer</option>
+                <option value="Backend Developer">Backend Developer</option>
+                <option value="Full Stack Developer">
+                  Full Stack Developer
+                </option>
+                <option value="UI/UX Designer">UI/UX Designer</option>
+                <option value="Product Manager">Product Manager</option>
+                <option value="DevOps Engineer">DevOps Engineer</option>
+                <option value="Data Scientist">Data Scientist</option>
+                <option value="QA Engineer">QA Engineer</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="userBio">📄 Bio:</label>
+              <textarea
+                id="userBio"
+                name="userBio"
+                required
+                placeholder="Tell us about yourself..."
+              ></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="imageUrl">🖼️ Image URL:</label>
+              <input
+                type="url"
+                id="imageUrl"
+                name="imageUrl"
+                placeholder="https://example.com/image.jpg"
+              />
+            </div>
+
+            <button type="submit" class="btn btn-primary">➕ Add User</button>
+            <button type="button" class="btn btn-warning" id="fillSample">
+              🎲 Fill Sample Data
+            </button>
+            <button type="reset" class="btn btn-danger">🗑️ Clear Form</button>
+          </form>
+        </div>
+
+        <!-- Users Display Section -->
+        <div class="users-section">
+          <h2>👥 Users List</h2>
+          <div class="btn-group" style="margin-bottom: 20px">
+            <button class="btn btn-success" id="addMultiple">
+              ➕ Add Multiple Users
+            </button>
+            <button class="btn btn-warning" id="updateAll">
+              🔄 Update All Roles
+            </button>
+            <button class="btn btn-danger" id="clearAll">🗑️ Clear All</button>
+          </div>
+          <div id="usersList">
+            <div class="no-users">
+              No users added yet. Use the form to add your first user! 🚀
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Method Demonstration Section -->
+      <div class="demo-section">
+        <h3>🎯 Call, Bind, Apply Methods Demonstration</h3>
+
+        <div class="method-demo">
+          <h4>🔗 BIND Method</h4>
+          <p>
+            Creates a new function with 'this' permanently bound to a specific
+            object.
+          </p>
+          <div class="code-example">
+            // Event listener using bind() form.addEventListener("submit",
+            this.handleSubmit.bind(this)); // Method binding for context
+            preservation const boundMethod =
+            userManager.addUser.bind(userManager);
+          </div>
+        </div>
+
+        <div class="method-demo">
+          <h4>📞 CALL Method</h4>
+          <p>
+            Calls a function with a specific 'this' value and individual
+            arguments.
+          </p>
+          <div class="code-example">
+            // Using call() to invoke method with different context
+            userValidator.validate.call(newUser, userData); // Borrowing methods
+            from other objects Array.prototype.push.call(userList, newUser);
+          </div>
+        </div>
+
+        <div class="method-demo">
+          <h4>🎯 APPLY Method</h4>
+          <p>Similar to call() but takes arguments as an array.</p>
+          <div class="code-example">
+            // Using apply() with array of arguments
+            userManager.addMultipleUsers.apply(userManager, [user1, user2,
+            user3]); // Finding max/min values const maxId =
+            Math.max.apply(null, userIds);
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="./main.js"></script>
+  </body>
+</html>

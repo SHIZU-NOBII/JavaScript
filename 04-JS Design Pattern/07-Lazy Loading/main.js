@@ -1,6 +1,6 @@
 // LAZY LOADING WITH INTERSECTION OBSERVER - Enhanced Implementation
 // Efficiently loads content only when it becomes visible in the viewport
-
+"use strict";
 console.log("=== LAZY LOADING WITH INTERSECTION OBSERVER ===\n");
 
 // ============= CONFIGURATION =============
@@ -516,3 +516,9 @@ window.lazyLoadingDemo = {
   simulateSlowNetwork,
   state,
 };
+
+function printThis() {
+  console.log(this);
+}
+
+printThis();
