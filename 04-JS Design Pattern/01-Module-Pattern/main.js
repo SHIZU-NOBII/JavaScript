@@ -1,6 +1,5 @@
 console.log("Working");
-alert("MAIN JS EXECUTED");
-
+// // Moduel Pattern
 let Bank = (function () {
   let bankBalance = 1000; // private variable
 
